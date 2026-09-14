@@ -1,6 +1,6 @@
 import { App, MarkdownPostProcessorContext, MarkdownRenderChild, Notice } from 'obsidian';
 import { MaxModal } from './max-modal';
-import { displayLabel, parseTallyLine, serializeTally } from './parse';
+import { displayLabel, parseTallyLine, progress, serializeTally, startCount } from './parse';
 import type { Tally } from './parse';
 
 export class TallyView extends MarkdownRenderChild {
@@ -36,19 +36,22 @@ export class TallyView extends MarkdownRenderChild {
 		});
 		this.maxEl.addEventListener('click', () => this.openMaxModal());
 
+		// the button that moves the count toward the target is the big one;
+		// the other direction stays available for corrections but recedes.
+		const isDown = this.tally.direction === 'down';
 		const actions = card.createDiv({ cls: 'tally-actions' });
-		const dec = actions.createEl('button', {
-			cls: 'tally-btn tally-dec',
-			text: '−',
-			attr: { 'aria-label': 'Decrease' },
+		const secondary = actions.createEl('button', {
+			cls: 'tally-btn tally-secondary',
+			text: isDown ? '+' : '−',
+			attr: { 'aria-label': isDown ? 'Increase' : 'Decrease' },
 		});
-		dec.addEventListener('click', () => this.bump(-1));
-		const inc = actions.createEl('button', {
-			cls: 'tally-btn tally-inc',
-			text: '+',
-			attr: { 'aria-label': 'Increase' },
+		secondary.addEventListener('click', () => this.bump(isDown ? 1 : -1));
+		const primary = actions.createEl('button', {
+			cls: 'tally-btn tally-primary',
+			text: isDown ? '−' : '+',
+			attr: { 'aria-label': isDown ? 'Decrease' : 'Increase' },
 		});
-		inc.addEventListener('click', () => this.bump(1));
+		primary.addEventListener('click', () => this.bump(isDown ? -1 : 1));
 
 		card.createDiv({ cls: 'tally-bar' }).createDiv({ cls: 'tally-bar-fill' });
 
@@ -56,26 +59,34 @@ export class TallyView extends MarkdownRenderChild {
 	}
 
 	private render() {
-		const { count, max } = this.tally;
+		const { count, max, intent } = this.tally;
 		this.countEl.setText(String(count));
 		this.maxEl.setText(String(max));
 
-		const ratio = max > 0 ? count / max : 0;
-		const isOver = max > 0 && count > max;
+		const ratio = progress(this.tally);
+		const isOver = max > 0 && ratio > 1;
+		const isFull = max > 0 && ratio === 1;
 		this.cardEl.toggleClass('is-over', isOver);
-		this.cardEl.toggleClass('is-full', !isOver && max > 0 && count === max);
+		this.cardEl.toggleClass('is-full', isFull);
+		this.cardEl.toggleClass('is-good', intent === 'good');
 
-		// colour warms in two legs: neutral → yellow over the first half,
-		// yellow → orange over the second; past the max it snaps to red.
+		// colour stays neutral for the first half, then warms in two legs:
+		// neutral → first tint over 50–80%, first → second tint over 80–100%.
+		// `bad` runs yellow → orange (red once past the max); `good` runs
+		// straight to green.
+		const [tintA, tintB] =
+			intent === 'good'
+				? ['var(--color-green)', 'var(--color-green)']
+				: ['var(--color-yellow)', 'var(--color-orange)'];
 		let from = 'var(--text-normal)';
-		let to = 'var(--color-yellow)';
+		let to = tintA;
 		let mix = 0;
-		if (ratio > 0.5) {
-			from = 'var(--color-yellow)';
-			to = 'var(--color-orange)';
-			mix = Math.min((ratio - 0.5) / 0.5, 1);
-		} else {
-			mix = Math.max(ratio / 0.5, 0);
+		if (ratio > 0.8) {
+			from = tintA;
+			to = tintB;
+			mix = Math.min((ratio - 0.8) / 0.2, 1);
+		} else if (ratio > 0.5) {
+			mix = (ratio - 0.5) / 0.3;
 		}
 		this.cardEl.setCssProps({
 			'--tally-from': from,
@@ -92,10 +103,12 @@ export class TallyView extends MarkdownRenderChild {
 	}
 
 	private openMaxModal() {
-		new MaxModal(this.app, this.tally.max, ({ max, shouldReset }) => {
+		const resetLabel =
+			this.tally.direction === 'down' ? 'Reset count to max' : 'Reset count to 0';
+		new MaxModal(this.app, this.tally.max, resetLabel, ({ max, shouldReset }) => {
 			this.tally.max = max;
 			if (shouldReset) {
-				this.tally.count = 0;
+				this.tally.count = startCount(this.tally);
 			}
 			this.render();
 			void this.persist();

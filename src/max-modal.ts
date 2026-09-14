@@ -12,6 +12,7 @@ export class MaxModal extends Modal {
 	constructor(
 		app: App,
 		currentMax: number,
+		private resetLabel: string,
 		private onSubmit: (result: MaxModalResult) => void,
 	) {
 		super(app);
@@ -41,7 +42,7 @@ export class MaxModal extends Modal {
 			}, 0);
 		});
 
-		new Setting(contentEl).setName('Reset count to 0').addToggle((toggle) => {
+		new Setting(contentEl).setName(this.resetLabel).addToggle((toggle) => {
 			toggle.setValue(this.shouldReset).onChange((v) => {
 				this.shouldReset = v;
 			});

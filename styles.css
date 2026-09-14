@@ -19,6 +19,12 @@
 	border-color: var(--color-red);
 }
 
+.tally.is-good.is-full,
+.tally.is-good.is-over {
+	--tally-accent: var(--color-green);
+	border-color: var(--color-green);
+}
+
 .tally-main {
 	flex: 1;
 	min-width: 0;
@@ -96,17 +102,17 @@
 	transform: scale(0.94);
 }
 
-.tally-inc {
+.tally-primary {
 	background: var(--tally-accent);
 	color: var(--text-on-accent);
 	min-width: 72px;
 }
 
-.tally.is-over .tally-inc {
+.tally.is-over .tally-primary {
 	color: var(--text-on-accent-inverted, #fff);
 }
 
-.tally-dec {
+.tally-secondary {
 	background: var(--background-modifier-hover);
 	color: var(--text-muted);
 	min-width: 44px;
@@ -141,6 +147,6 @@
 	min-height: 64px;
 }
 
-.is-mobile .tally-inc {
+.is-mobile .tally-primary {
 	min-width: 84px;
 }

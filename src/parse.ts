@@ -1,11 +1,20 @@
-// a tally block body is a single line like `Coffee: 4 / 20`. the prefix (label)
-// is kept verbatim so a round-trip never rewrites the user's wording.
-const LINE_RE = /^(.*?)\s*(-?\d+)\s*\/\s*(\d+)\s*$/;
+// a tally block body is a single line like `Coffee: 4 / 20 (down, good)`.
+// prefix and suffix are kept verbatim so a round-trip never rewrites the
+// user's wording; only the two numbers are regenerated.
+const LINE_RE = /^(.*?)\s*(-?\d+)\s*\/\s*(\d+)(\s*\(?[\s,]*(?:(?:up|down|good|bad)[\s,]*)*\)?\s*)$/i;
+
+export type Direction = 'up' | 'down';
+// what reaching the max means: `bad` warms toward red (a budget being
+// used up), `good` cools toward green (a goal being hit).
+export type Intent = 'bad' | 'good';
 
 export interface Tally {
 	prefix: string;
 	count: number;
 	max: number;
+	suffix: string;
+	direction: Direction;
+	intent: Intent;
 }
 
 export function parseTallyLine(line: string): Tally | null {
@@ -13,10 +22,15 @@ export function parseTallyLine(line: string): Tally | null {
 	if (!m) {
 		return null;
 	}
+	const suffix = m[4] ?? '';
+	const words: string[] = suffix.toLowerCase().match(/up|down|good|bad/g) ?? [];
 	return {
 		prefix: m[1] ?? '',
 		count: Number(m[2]),
 		max: Number(m[3]),
+		suffix,
+		direction: words.includes('down') ? 'down' : 'up',
+		intent: words.includes('good') ? 'good' : 'bad',
 	};
 }
 
@@ -32,10 +46,24 @@ export function parseTallySource(source: string): Tally | null {
 
 export function serializeTally(t: Tally): string {
 	const label = t.prefix ? `${t.prefix} ` : '';
-	return `${label}${t.count} / ${t.max}`;
+	return `${label}${t.count} / ${t.max}${t.suffix.trimEnd()}`;
 }
 
 // display label: prefix without a trailing colon
 export function displayLabel(t: Tally): string {
 	return t.prefix.replace(/:\s*$/, '');
+}
+
+// where the count sits after a reset
+export function startCount(t: Tally): number {
+	return t.direction === 'down' ? t.max : 0;
+}
+
+// how far along the tally is, 0 at the start value, 1 at the target,
+// above 1 once past it
+export function progress(t: Tally): number {
+	if (t.max <= 0) {
+		return 0;
+	}
+	return t.direction === 'down' ? (t.max - t.count) / t.max : t.count / t.max;
 }
