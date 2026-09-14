@@ -27,7 +27,8 @@ export class TallyView extends MarkdownRenderChild {
 		const card = this.containerEl.createDiv({ cls: 'tally' });
 		this.cardEl = card;
 
-		const main = card.createDiv({ cls: 'tally-main' });
+		const row = card.createDiv({ cls: 'tally-row' });
+		const main = row.createDiv({ cls: 'tally-main' });
 		const label = displayLabel(this.tally);
 		if (label) {
 			main.createDiv({ cls: 'tally-label', text: label });
@@ -40,13 +41,12 @@ export class TallyView extends MarkdownRenderChild {
 			attr: { 'aria-label': 'Set max' },
 		});
 		this.maxEl.addEventListener('click', () => this.openMaxModal());
-		main.createDiv({ cls: 'tally-bar' }).createDiv({ cls: 'tally-bar-fill' });
 
 		// the button that moves the count toward the target is the big one;
 		// the other direction is an optional small button for corrections.
 		const isDown = this.tally.direction === 'down';
 		const { settings } = this.plugin;
-		const actions = card.createDiv({ cls: 'tally-actions' });
+		const actions = row.createDiv({ cls: 'tally-actions' });
 		if (this.tally.hasReverse) {
 			const secondary = actions.createEl('button', {
 				cls: 'tally-btn tally-secondary',
@@ -62,6 +62,8 @@ export class TallyView extends MarkdownRenderChild {
 		const fallback = isDown ? settings.downIcon || DEFAULT_SETTINGS.downIcon : settings.upIcon || DEFAULT_SETTINGS.upIcon;
 		setButtonIcon(primary, this.tally.icon ?? fallback);
 		primary.addEventListener('click', () => this.bump(isDown ? -1 : 1));
+
+		card.createDiv({ cls: 'tally-bar' }).createDiv({ cls: 'tally-bar-fill' });
 
 		this.render();
 	}

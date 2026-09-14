@@ -1,9 +1,9 @@
 .tally {
 	--tally-accent: color-mix(in oklab, var(--tally-from), var(--tally-to) var(--tally-mix));
 	display: flex;
-	align-items: stretch;
+	flex-direction: column;
 	gap: var(--size-4-3);
-	padding: var(--size-4-3) var(--size-4-4);
+	padding: var(--size-4-3);
 	border: 1px solid var(--background-modifier-border);
 	border-radius: var(--radius-l);
 	background: var(--background-secondary);
@@ -23,6 +23,12 @@
 .tally.is-good.is-over {
 	--tally-accent: var(--color-green);
 	border-color: var(--color-green);
+}
+
+.tally-row {
+	display: flex;
+	align-items: stretch;
+	gap: var(--size-4-3);
 }
 
 .tally-main {
@@ -84,13 +90,13 @@
 .tally-actions {
 	display: flex;
 	gap: var(--size-4-2);
-	align-items: center;
+	align-items: stretch;
 }
 
 .tally .tally-btn {
 	height: auto;
-	min-width: 56px;
-	min-height: 56px;
+	min-width: 52px;
+	min-height: 48px;
 	font-size: 1.8em;
 	font-weight: var(--font-bold);
 	line-height: 1;
@@ -132,7 +138,6 @@
 }
 
 .tally-bar {
-	margin-top: var(--size-2-2);
 	height: 8px;
 	border-radius: 999px;
 	background: var(--background-modifier-border);
