@@ -35,7 +35,7 @@ export function parseTallyLine(line: string): Tally | null {
 	const icon = iconClause?.[1] ?? null;
 	// strip the icon clause first so a name like `arrow-down` can't flip the direction
 	const rest = iconClause ? suffix.replace(iconClause[0], '') : suffix;
-	const words: string[] = rest.toLowerCase().match(/\b(?:up|down|good|bad|undo)\b/g) ?? [];
+	const words: string[] = rest.toLowerCase().match(/\b(?:up|down|good|bad|reverse)\b/g) ?? [];
 	return {
 		prefix: m[1] ?? '',
 		count: Number(m[2]),
@@ -44,7 +44,7 @@ export function parseTallyLine(line: string): Tally | null {
 		direction: words.includes('down') ? 'down' : 'up',
 		intent: words.includes('good') ? 'good' : 'bad',
 		icon,
-		hasUndo: words.includes('reverse'),
+		hasReverse: words.includes('reverse'),
 	};
 }
 
