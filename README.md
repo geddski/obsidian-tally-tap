@@ -3,7 +3,7 @@
 Big, tappable counters for [Obsidian](https://obsidian.md). Track how much of something you've used up (or how far you've come) with one tap, on desktop and mobile.
 
 <p align="center">
-  <img src="docs/tally.png" width="330" alt="Five tally counters: Diet Coke 1 / 3, Pomodoros 6 / 8 in yellow, Meetings 5 / 4 in red, Pushups left 12 / 40 counting down in green, Water 8 / 8 in green">
+  <img src="docs/tally.png" width="600" alt="Four tally counters: Diet Coke 9 / 3 in red, Walks 1 / 3 with a reverse button, Pushups 12 / 40 counting down in green, Water 8 / 8 in green">
 </p>
 
 ## Usage
