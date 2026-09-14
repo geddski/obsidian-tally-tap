@@ -16,7 +16,7 @@ One line: optional label, `count / max`, optional trailing words in parentheses.
 | `down` | count descends from max toward 0; reset returns it to max       |
 | `bad`  | reaching max is a limit: neutral → yellow → orange, red past it (default) |
 | `good` | reaching max is a goal: neutral → green                         |
-| `undo` | also show a small button that steps the other way, for corrections |
+| `reverse` | also show a small button that steps the other way, for corrections |
 | `icon: <name>` | button icon for this block: a [Lucide](https://lucide.dev) name or an emoji |
 
 ````

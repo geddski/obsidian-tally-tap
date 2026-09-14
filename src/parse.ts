@@ -1,7 +1,7 @@
 // a tally block body is a single line like `Coffee: 4 / 20 (down, good, icon: coffee)`.
 // prefix and suffix are kept verbatim so a round-trip never rewrites the
 // user's wording; only the two numbers are regenerated.
-const OPTION = String.raw`(?:up|down|good|bad|undo|icon:\s*\S+?)`;
+const OPTION = String.raw`(?:up|down|good|bad|reverse|icon:\s*\S+?)`;
 const LINE_RE = new RegExp(
 	String.raw`^(.*?)\s*(-?\d+)\s*\/\s*(\d+)(\s*\(?[\s,]*(?:${OPTION}[\s,]*)*\)?\s*)$`,
 	'i',
@@ -22,7 +22,7 @@ export interface Tally {
 	// per-block icon override: lucide name or emoji
 	icon: string | null;
 	// show a small button that steps the other way, for corrections
-	hasUndo: boolean;
+	hasReverse: boolean;
 }
 
 export function parseTallyLine(line: string): Tally | null {
@@ -44,7 +44,7 @@ export function parseTallyLine(line: string): Tally | null {
 		direction: words.includes('down') ? 'down' : 'up',
 		intent: words.includes('good') ? 'good' : 'bad',
 		icon,
-		hasUndo: words.includes('undo'),
+		hasUndo: words.includes('reverse'),
 	};
 }
 

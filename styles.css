@@ -132,17 +132,17 @@
 }
 
 .tally-bar {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	height: 4px;
+	margin-top: var(--size-2-2);
+	height: 8px;
+	border-radius: 999px;
 	background: var(--background-modifier-border);
+	overflow: hidden;
 }
 
 .tally-bar-fill {
 	height: 100%;
 	width: var(--tally-progress);
+	border-radius: inherit;
 	background: var(--tally-accent);
 	transition: width 200ms ease, background-color 200ms ease;
 }
