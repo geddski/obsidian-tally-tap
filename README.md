@@ -1,4 +1,4 @@
-# Tally
+# Tally Tap
 
 Big, tappable counters for [Obsidian](https://obsidian.md). Track how much of something you've used up (or how far you've come) with one tap, on desktop and mobile.
 
@@ -45,14 +45,14 @@ Pomodoros: 0 / 8 (reverse, icon: 🍅)
 ```
 ````
 
-The command **Tally: Insert counter** drops a new block at the cursor. Settings let you change the default up and down icons.
+The command **Tally Tap: Insert counter** drops a new block at the cursor. Settings let you change the default up and down icons.
 
 ## Install
 
 Not yet in the community plugin list. Until then:
 
-- **BRAT**: install [BRAT](https://github.com/TfTHacker/obsidian42-brat), then *Add beta plugin* with `geddski/obsidian-tally`.
-- **Manual**: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/geddski/obsidian-tally/releases/latest) into `<vault>/.obsidian/plugins/tally/`, then enable Tally under *Community plugins*.
+- **BRAT**: install [BRAT](https://github.com/TfTHacker/obsidian42-brat), then *Add beta plugin* with `geddski/obsidian-tally-tap`.
+- **Manual**: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/geddski/obsidian-tally-tap/releases/latest) into `<vault>/.obsidian/plugins/tally-tap/`, then enable Tally Tap under *Community plugins*.
 
 ## Development
 
@@ -63,6 +63,6 @@ bun run build    # typecheck + minified build
 bun run lint
 ```
 
-Symlink the repo into a vault's `.obsidian/plugins/tally` to run it live. With the [Hot Reload](https://github.com/pjeby/hot-reload) plugin installed, the `.hotreload` marker reloads Tally on every rebuild.
+Symlink the repo into a vault's `.obsidian/plugins/tally-tap` to run it live. With the [Hot Reload](https://github.com/pjeby/hot-reload) plugin installed, the `.hotreload` marker reloads Tally Tap on every rebuild.
 
 Releases: bump with `npm version patch|minor|major`, then push the tag. The release workflow builds and attaches the artifacts.

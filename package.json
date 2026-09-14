@@ -1,6 +1,6 @@
 {
-	"name": "tally",
-	"version": "0.1.0",
+	"name": "tally-tap",
+	"version": "0.1.1",
 	"description": "Big tappable counters (4 / 20) that warm from yellow to orange to red as you approach and pass a max.",
 	"main": "main.js",
 	"type": "module",
