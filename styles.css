@@ -62,7 +62,8 @@
 	color: var(--text-faint);
 }
 
-.tally-max {
+.tally .tally-max {
+	height: auto;
 	font-size: 1.4em;
 	color: var(--text-muted);
 	background: none;
@@ -75,7 +76,7 @@
 	font-variant-numeric: tabular-nums;
 }
 
-.tally-max:hover {
+.tally .tally-max:hover {
 	background: var(--background-modifier-hover);
 	color: var(--text-normal);
 }
@@ -83,10 +84,11 @@
 .tally-actions {
 	display: flex;
 	gap: var(--size-4-2);
-	align-items: stretch;
+	align-items: center;
 }
 
-.tally-btn {
+.tally .tally-btn {
+	height: auto;
 	min-width: 56px;
 	min-height: 56px;
 	font-size: 1.8em;
@@ -98,13 +100,15 @@
 	transition: transform 80ms ease, background-color 120ms ease;
 }
 
-.tally-btn:active {
+.tally .tally-btn:active {
 	transform: scale(0.94);
 }
 
-.tally-primary {
-	background: var(--tally-accent);
-	color: var(--text-on-accent);
+.tally .tally-primary {
+	/* tinted fill with the icon in the accent itself stays legible at every
+	   stage (white, yellow, orange, red, green) in both themes */
+	background: color-mix(in oklab, var(--tally-accent) 18%, transparent);
+	color: var(--tally-accent);
 	min-width: 72px;
 	display: inline-flex;
 	align-items: center;
@@ -117,11 +121,11 @@
 	stroke-width: 2.5;
 }
 
-.tally.is-over .tally-primary {
-	color: var(--text-on-accent-inverted, #fff);
+.tally .tally-primary:hover {
+	background: color-mix(in oklab, var(--tally-accent) 28%, transparent);
 }
 
-.tally-secondary {
+.tally .tally-secondary {
 	background: var(--background-modifier-hover);
 	color: var(--text-muted);
 	min-width: 44px;

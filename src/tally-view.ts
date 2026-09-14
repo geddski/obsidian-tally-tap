@@ -46,7 +46,7 @@ export class TallyView extends MarkdownRenderChild {
 		const isDown = this.tally.direction === 'down';
 		const { settings } = this.plugin;
 		const actions = card.createDiv({ cls: 'tally-actions' });
-		if (settings.showCorrectionButton) {
+		if (this.tally.hasUndo) {
 			const secondary = actions.createEl('button', {
 				cls: 'tally-btn tally-secondary',
 				text: isDown ? '+' : '−',
