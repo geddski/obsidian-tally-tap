@@ -16,6 +16,7 @@ One line: optional label, `count / max`, optional trailing words in parentheses.
 | `down` | count descends from max toward 0; reset returns it to max       |
 | `bad`  | reaching max is a limit: neutral → yellow → orange, red past it (default) |
 | `good` | reaching max is a goal: neutral → green                         |
+| `icon: <name>` | button icon for this block: a [Lucide](https://lucide.dev) name or an emoji |
 
 ````
 ```tally
@@ -23,7 +24,8 @@ Pushups left: 40 / 40 (down, good)
 ```
 ````
 
-- The big button moves the count toward the target; the small one corrects the other way.
+- One big button moves the count toward the target. Its icon is an up/down arrow by default (Settings → Tally), overridable per block.
+- Settings can add a small button that corrects the other way.
 - Tap the max to change it. The dialog resets the count by default (to 0, or to max for `down`).
 - Colour stays neutral for the first half, then tints over the second half.
 - The block is rewritten in place, so the note stays plain markdown.

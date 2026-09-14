@@ -1,4 +1,7 @@
-import { App, MarkdownPostProcessorContext, MarkdownRenderChild, Notice } from 'obsidian';
+import { MarkdownRenderChild, Notice, getIcon, setIcon } from 'obsidian';
+import type { MarkdownPostProcessorContext } from 'obsidian';
+import type TallyPlugin from './main';
+import { DEFAULT_SETTINGS } from './settings';
 import { MaxModal } from './max-modal';
 import { displayLabel, parseTallyLine, progress, serializeTally, startCount } from './parse';
 import type { Tally } from './parse';
@@ -7,15 +10,17 @@ export class TallyView extends MarkdownRenderChild {
 	private countEl!: HTMLElement;
 	private maxEl!: HTMLElement;
 	private cardEl!: HTMLElement;
+	private app: TallyPlugin['app'];
 
 	constructor(
 		containerEl: HTMLElement,
-		private app: App,
+		private plugin: TallyPlugin,
 		private ctx: MarkdownPostProcessorContext,
 		private source: string,
 		private tally: Tally,
 	) {
 		super(containerEl);
+		this.app = plugin.app;
 	}
 
 	onload() {
@@ -37,20 +42,24 @@ export class TallyView extends MarkdownRenderChild {
 		this.maxEl.addEventListener('click', () => this.openMaxModal());
 
 		// the button that moves the count toward the target is the big one;
-		// the other direction stays available for corrections but recedes.
+		// the other direction is an optional small button for corrections.
 		const isDown = this.tally.direction === 'down';
+		const { settings } = this.plugin;
 		const actions = card.createDiv({ cls: 'tally-actions' });
-		const secondary = actions.createEl('button', {
-			cls: 'tally-btn tally-secondary',
-			text: isDown ? '+' : '−',
-			attr: { 'aria-label': isDown ? 'Increase' : 'Decrease' },
-		});
-		secondary.addEventListener('click', () => this.bump(isDown ? 1 : -1));
+		if (settings.showCorrectionButton) {
+			const secondary = actions.createEl('button', {
+				cls: 'tally-btn tally-secondary',
+				text: isDown ? '+' : '−',
+				attr: { 'aria-label': isDown ? 'Increase' : 'Decrease' },
+			});
+			secondary.addEventListener('click', () => this.bump(isDown ? 1 : -1));
+		}
 		const primary = actions.createEl('button', {
 			cls: 'tally-btn tally-primary',
-			text: isDown ? '−' : '+',
 			attr: { 'aria-label': isDown ? 'Decrease' : 'Increase' },
 		});
+		const fallback = isDown ? settings.downIcon || DEFAULT_SETTINGS.downIcon : settings.upIcon || DEFAULT_SETTINGS.upIcon;
+		setButtonIcon(primary, this.tally.icon ?? fallback);
 		primary.addEventListener('click', () => this.bump(isDown ? -1 : 1));
 
 		card.createDiv({ cls: 'tally-bar' }).createDiv({ cls: 'tally-bar-fill' });
@@ -146,6 +155,15 @@ export class TallyView extends MarkdownRenderChild {
 			return lines.join('\n');
 		});
 		this.source = nextLine;
+	}
+}
+
+// a lucide name renders as an svg; anything else (an emoji, say) is shown as text
+function setButtonIcon(el: HTMLElement, icon: string) {
+	if (getIcon(icon)) {
+		setIcon(el, icon);
+	} else {
+		el.setText(icon);
 	}
 }
 

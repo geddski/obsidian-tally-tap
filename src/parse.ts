@@ -1,7 +1,11 @@
-// a tally block body is a single line like `Coffee: 4 / 20 (down, good)`.
+// a tally block body is a single line like `Coffee: 4 / 20 (down, good, icon: coffee)`.
 // prefix and suffix are kept verbatim so a round-trip never rewrites the
 // user's wording; only the two numbers are regenerated.
-const LINE_RE = /^(.*?)\s*(-?\d+)\s*\/\s*(\d+)(\s*\(?[\s,]*(?:(?:up|down|good|bad)[\s,]*)*\)?\s*)$/i;
+const OPTION = String.raw`(?:up|down|good|bad|icon:\s*\S+?)`;
+const LINE_RE = new RegExp(
+	String.raw`^(.*?)\s*(-?\d+)\s*\/\s*(\d+)(\s*\(?[\s,]*(?:${OPTION}[\s,]*)*\)?\s*)$`,
+	'i',
+);
 
 export type Direction = 'up' | 'down';
 // what reaching the max means: `bad` warms toward red (a budget being
@@ -15,6 +19,8 @@ export interface Tally {
 	suffix: string;
 	direction: Direction;
 	intent: Intent;
+	// per-block icon override: lucide name or emoji
+	icon: string | null;
 }
 
 export function parseTallyLine(line: string): Tally | null {
@@ -23,7 +29,11 @@ export function parseTallyLine(line: string): Tally | null {
 		return null;
 	}
 	const suffix = m[4] ?? '';
-	const words: string[] = suffix.toLowerCase().match(/up|down|good|bad/g) ?? [];
+	const iconClause = /icon:\s*([^\s,)]+)/i.exec(suffix);
+	const icon = iconClause?.[1] ?? null;
+	// strip the icon clause first so a name like `arrow-down` can't flip the direction
+	const rest = iconClause ? suffix.replace(iconClause[0], '') : suffix;
+	const words: string[] = rest.toLowerCase().match(/\b(?:up|down|good|bad)\b/g) ?? [];
 	return {
 		prefix: m[1] ?? '',
 		count: Number(m[2]),
@@ -31,6 +41,7 @@ export function parseTallyLine(line: string): Tally | null {
 		suffix,
 		direction: words.includes('down') ? 'down' : 'up',
 		intent: words.includes('good') ? 'good' : 'bad',
+		icon,
 	};
 }
 

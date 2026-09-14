@@ -106,6 +106,15 @@
 	background: var(--tally-accent);
 	color: var(--text-on-accent);
 	min-width: 72px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tally-primary .svg-icon {
+	width: 28px;
+	height: 28px;
+	stroke-width: 2.5;
 }
 
 .tally.is-over .tally-primary {
@@ -149,4 +158,9 @@
 
 .is-mobile .tally-primary {
 	min-width: 84px;
+}
+
+.is-mobile .tally-primary .svg-icon {
+	width: 32px;
+	height: 32px;
 }
