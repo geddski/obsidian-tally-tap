@@ -1,0 +1,146 @@
+.tally {
+	--tally-accent: color-mix(in oklab, var(--tally-from), var(--tally-to) var(--tally-mix));
+	display: flex;
+	align-items: stretch;
+	gap: var(--size-4-3);
+	padding: var(--size-4-3) var(--size-4-4);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-l);
+	background: var(--background-secondary);
+	position: relative;
+	overflow: hidden;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+}
+
+.tally.is-over {
+	--tally-accent: var(--color-red);
+	border-color: var(--color-red);
+}
+
+.tally-main {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: var(--size-2-1);
+}
+
+.tally-label {
+	font-size: var(--font-ui-small);
+	color: var(--text-muted);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tally-numbers {
+	display: flex;
+	align-items: baseline;
+	gap: var(--size-2-2);
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}
+
+.tally-count {
+	font-size: 2.5em;
+	font-weight: var(--font-bold);
+	color: var(--tally-accent);
+	transition: color 200ms ease;
+}
+
+.tally-sep {
+	font-size: 1.4em;
+	color: var(--text-faint);
+}
+
+.tally-max {
+	font-size: 1.4em;
+	color: var(--text-muted);
+	background: none;
+	border: none;
+	box-shadow: none;
+	padding: var(--size-2-1) var(--size-2-2);
+	min-height: 44px;
+	border-radius: var(--radius-s);
+	cursor: pointer;
+	font-variant-numeric: tabular-nums;
+}
+
+.tally-max:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
+.tally-actions {
+	display: flex;
+	gap: var(--size-4-2);
+	align-items: stretch;
+}
+
+.tally-btn {
+	min-width: 56px;
+	min-height: 56px;
+	font-size: 1.8em;
+	font-weight: var(--font-bold);
+	line-height: 1;
+	border-radius: var(--radius-m);
+	cursor: pointer;
+	box-shadow: none;
+	transition: transform 80ms ease, background-color 120ms ease;
+}
+
+.tally-btn:active {
+	transform: scale(0.94);
+}
+
+.tally-inc {
+	background: var(--tally-accent);
+	color: var(--text-on-accent);
+	min-width: 72px;
+}
+
+.tally.is-over .tally-inc {
+	color: var(--text-on-accent-inverted, #fff);
+}
+
+.tally-dec {
+	background: var(--background-modifier-hover);
+	color: var(--text-muted);
+	min-width: 44px;
+}
+
+.tally-bar {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 4px;
+	background: var(--background-modifier-border);
+}
+
+.tally-bar-fill {
+	height: 100%;
+	width: var(--tally-progress);
+	background: var(--tally-accent);
+	transition: width 200ms ease, background-color 200ms ease;
+}
+
+.tally-error {
+	color: var(--text-error);
+	font-size: var(--font-ui-small);
+}
+
+.is-mobile .tally-count {
+	font-size: 3em;
+}
+
+.is-mobile .tally-btn {
+	min-height: 64px;
+}
+
+.is-mobile .tally-inc {
+	min-width: 84px;
+}
