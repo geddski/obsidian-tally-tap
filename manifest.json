@@ -4,7 +4,7 @@
 	"version": "0.1.1",
 	"minAppVersion": "1.13.0",
 	"description": "Big tappable counters (4 / 20) that warm from yellow to orange to red as you approach and pass a max.",
-	"author": "Davie",
+	"author": "geddski",
 	"authorUrl": "https://github.com/geddski",
 	"isDesktopOnly": false
 }
